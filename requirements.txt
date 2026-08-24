@@ -1,0 +1,14 @@
+# Core Python dependencies used across the notebooks.
+# The project was developed in Google Colab with GPU acceleration.
+# PyTorch/CUDA compatibility depends on the active Colab runtime.
+
+SimpleITK
+antspyx
+matplotlib
+nibabel
+numpy
+pandas
+scipy
+scikit-learn
+torch
+tqdm

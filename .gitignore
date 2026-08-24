@@ -1,0 +1,66 @@
+# ADNI data and generated project data
+data/
+raw/
+processed/
+interim/
+manifests/
+qc/
+outputs/
+results/
+checkpoints/
+models/
+experiments/
+
+# Medical imaging and large arrays
+*.dcm
+*.nii
+*.nii.gz
+*.npy
+*.npz
+*.mha
+*.mhd
+
+# Model checkpoints
+*.pt
+*.pth
+*.ckpt
+
+# Participant-level and generated tabular data
+*.csv
+*.tsv
+*.parquet
+*.feather
+
+# Keep repository-level documentation and configuration files
+!README.md
+!requirements.txt
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+env/
+
+# Colab/local credentials and configuration
+credentials.json
+token.json
+*.pem
+*.key
+.env
+.env.*
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
