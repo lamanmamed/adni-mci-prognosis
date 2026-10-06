@@ -31,6 +31,12 @@ experiments/
 *.parquet
 *.feather
 
+# Curated aggregate results included with the public repository
+!results/
+results/*
+!results/extended_experiments/
+!results/extended_experiments/**
+
 # Keep repository-level documentation and configuration files
 !README.md
 !requirements.txt

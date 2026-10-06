@@ -1,0 +1,13 @@
+experiment,method,n,roc_auc,average_precision,brier_score,aggregation
+nested_cv_seed_ensemble,3MT,544,0.882336,0.854382,0.159326,pooled out-of-fold
+nested_cv_seed_ensemble,TMC,544,0.904254,0.879289,0.134064,pooled out-of-fold
+nested_cv_seed_ensemble,Hybrid fixed-equal,544,0.900769,0.873245,0.138151,pooled out-of-fold
+classical_five_seed_probability_ensemble,RBF-SVM,544,0.940358,0.93469,0.096236,five-seed probability ensemble
+classical_five_seed_probability_ensemble,Logistic regression,544,0.936723,0.927193,0.098506,five-seed probability ensemble
+classical_five_seed_probability_ensemble,Random forest,544,0.93234,0.926491,0.10218,five-seed probability ensemble
+classical_five_seed_probability_ensemble,XGBoost,544,0.918726,0.910748,0.137016,five-seed probability ensemble
+svm_neural_fusion,SVM,544,0.94029,0.934639,0.096232,pooled out-of-fold
+svm_neural_fusion,Equal SVM + TMC,544,0.94387,0.939398,0.097317,pooled out-of-fold
+svm_neural_fusion,Equal SVM + hybrid,544,0.943625,0.939505,0.097814,pooled out-of-fold
+svm_neural_fusion,Validation-selected SVM + TMC,544,0.942291,0.937914,0.098225,pooled out-of-fold
+svm_neural_fusion,Validation-selected SVM + hybrid,544,0.941052,0.935373,0.099154,pooled out-of-fold

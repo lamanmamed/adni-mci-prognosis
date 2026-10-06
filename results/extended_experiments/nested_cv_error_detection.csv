@@ -1,0 +1,6 @@
+signal,error_detection_roc_auc,n_errors,n_correct
+Hybrid evidential uncertainty,0.66495,83,461
+3MT evidential uncertainty,0.645271,83,461
+TMC evidential uncertainty,0.664428,83,461
+Mean TMC conflict,0.574262,83,461
+Seed SD of hybrid probability,0.621985,83,461
