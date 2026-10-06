@@ -1,0 +1,5 @@
+method_a,method_b,auc_difference,ci_2_5,ci_97_5
+Equal SVM + hybrid,SVM,0.003335,-0.003569,0.01077
+Equal SVM + TMC,SVM,0.00358,-0.003717,0.010796
+Validation-selected SVM + hybrid,SVM,0.000762,-0.007134,0.008822
+Validation-selected SVM + TMC,SVM,0.002001,-0.005486,0.010347

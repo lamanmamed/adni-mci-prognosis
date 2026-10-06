@@ -1,13 +1,13 @@
 # Availability-aware multimodal learning for MCI prognosis
 
-This repository contains the implementation used for an MSc Artificial Intelligence project on 36-month progression from mild cognitive impairment (MCI) to Alzheimer's disease using multimodal ADNI data.
+This repository contains the implementation of an MSc Artificial Intelligence project on 36-month progression from mild cognitive impairment (MCI) to Alzheimer's disease using multimodal ADNI data, together with follow-up experiments carried out after the dissertation.
 
-The final model combines two complementary pathways:
+The core model combines two pathways:
 
-- a cross-modal interaction pathway, which models dependencies between available modalities;
-- a modality-specific evidence pathway, which produces uncertainty-aware predictions from individual modalities and combines their evidence.
+- a cross-modal interaction pathway that models dependencies between available modalities;
+- a modality-specific evidential pathway that produces uncertainty-aware predictions and combines evidence across modalities.
 
-The implementation explicitly retains participants with incomplete multimodal records. Missing modalities are represented using availability masks rather than imputed measurements. The main experiments compare fixed equal fusion with learned participant-specific fusion and evaluate predictive uncertainty, modality conflict and temporal sensitivity.
+Participants with incomplete multimodal records are retained. Availability masks represent missing modalities instead of imputing entire missing branches.
 
 ## 1. Repository structure
 
@@ -17,13 +17,15 @@ The implementation explicitly retains participants with incomplete multimodal re
 03_evaluation_and_uncertainty/
 04_temporal_sensitivity/
 05_utilities/
+06_extended_experiments/
+results/
 ```
 
 ### 1.1 Data preparation
 
-The data-preparation notebooks construct the clinical cohort, preprocess the non-imaging modalities, prepare the MRI branch, align observations to baseline, create availability and feature masks, and produce the fold-specific model inputs.
+The data-preparation notebooks construct the clinical cohort, preprocess non-imaging modalities, prepare MRI inputs, align observations to baseline, create availability and feature masks, and write fold-specific model inputs.
 
-The recommended execution order is:
+Recommended order:
 
 ```text
 00_Non_Imaging_Inventory_and_Coverage.ipynb
@@ -50,7 +52,7 @@ The recommended execution order is:
 22_Fixed_Equal_Fusion_Seed_Sensitivity.ipynb
 ```
 
-The repeated evaluation uses seeds 17, 42 and 73 with five outer folds for each seed.
+The dissertation experiments use five outer folds and repeated random seeds.
 
 ### 1.3 Evaluation and uncertainty
 
@@ -62,7 +64,7 @@ The repeated evaluation uses seeds 17, 42 and 73 with five outer folds for each 
 34_Learned_Fusion_Routing_and_Constant_Baseline.ipynb
 ```
 
-These notebooks aggregate held-out predictions, compare the fusion strategies, and analyse evidential uncertainty and modality conflict.
+These notebooks aggregate held-out predictions, compare fusion strategies, and analyse evidential uncertainty and modality conflict.
 
 ### 1.4 Temporal sensitivity
 
@@ -75,17 +77,51 @@ These notebooks aggregate held-out predictions, compare the fusion strategies, a
 
 This analysis reconstructs a stricter pre-baseline input definition and compares it with the main fixed-fusion experiment.
 
-## 2. Data availability
+### 1.5 Extended experiments
+
+`06_extended_experiments/` contains the later model-selection and comparison work:
+
+```text
+model_selection/
+architecture_sensitivity/
+classical_baselines/
+fusion/
+uncertainty_and_error_analysis/
+```
+
+These experiments include nested model selection, small/medium/full architecture comparisons, five-seed classical baselines, seed-matched MRI embeddings, SVM–TMC/SVM–neural fusion, MC-dropout uncertainty and participant-level error-pattern analysis.
+
+Earlier superseded notebooks are kept under `archive/` for provenance. Current notebooks live one level above the archive folders.
+
+## 2. Selected follow-up results
+
+The figures below come from the completed follow-up notebooks. They are separate from the original dissertation result tables.
+
+### Nested-CV outer-test evaluation
+
+The locked five-seed nested-CV evaluation produced pooled out-of-fold ROC AUCs of 0.882 for 3MT, 0.904 for TMC and 0.901 for fixed-equal hybrid fusion across 544 participants.
+
+![Nested-CV pooled ROC](results/extended_experiments/figures/nested_cv_pooled_roc.png)
+
+### Classical and SVM fusion experiments
+
+The five-seed RBF-SVM baseline reached ROC AUC 0.940 in the pooled analysis. Equal SVM + TMC fusion reached 0.944, while validation-selected fusion weights did not improve on the simple equal-weight rule. The paired-bootstrap interval for the equal SVM + TMC improvement over SVM included zero, so the small numerical gain should not be treated as a clear performance difference.
+
+![SVM and TMC performance by fold](results/extended_experiments/figures/svm_tmc_auc_by_fold.png)
+
+Aggregate metrics and paired comparisons are available in `results/extended_experiments/`.
+
+## 3. Data availability
 
 This repository does not distribute ADNI data.
 
-The notebooks expect the authorised ADNI data and generated intermediate files to be stored separately, for example in Google Drive. Raw ADNI data, participant-level tables, MRI volumes, model checkpoints and generated experiment outputs should not be committed to this repository.
+Authorised ADNI data and generated intermediate files must be stored separately. Raw participant tables, MRI volumes, checkpoints and participant-level predictions should not be committed to the repository.
 
-Users wishing to reproduce the full pipeline must obtain ADNI access independently and reproduce the expected directory structure.
+Notebook outputs in the extended-experiment folder are intentionally cleared before publication. This removes participant identifiers, local filesystem paths and bulky execution logs while keeping the source code reproducible. Selected aggregate figures and tables are committed separately under `results/`.
 
-## 3. Execution environment
+## 4. Execution environment
 
-The notebooks were developed in Google Colab using Python and PyTorch with GPU acceleration.
+The original notebooks were developed in Google Colab using Python and PyTorch with GPU acceleration. Later experiments also used QMUL JHub.
 
 Install the Python dependencies with:
 
@@ -93,21 +129,19 @@ Install the Python dependencies with:
 pip install -r requirements.txt
 ```
 
-Some MRI preprocessing stages require additional imaging packages and are computationally expensive. GPU-backed execution is recommended for model training.
+MRI preprocessing and model training are computationally expensive and are intended for GPU-backed execution.
 
-## 4. Project root
+## 5. Project root
 
-The notebooks use a Google Drive project directory. The original experiments used:
+The original Colab experiments used:
 
 ```python
 PROJECT_ROOT = Path("/content/drive/MyDrive/adni_mri")
 ```
 
-If the project directory is stored elsewhere, update `PROJECT_ROOT` in the notebook setup cell before running the pipeline.
+JHub experiments use paths under `/home/jovyan/`. Update the configuration cell in each notebook when running in a different environment.
 
-Some internal directory names and experiment identifiers are retained for compatibility with the saved experimental outputs. They do not change the terminology used to describe the final method.
-
-## 5. Reproducing the main experiments
+## 6. Reproducing the dissertation experiments
 
 The final task-ready fold inputs are created by:
 
@@ -115,58 +149,58 @@ The final task-ready fold inputs are created by:
 01_data_preparation/13_Multimodal_Input_Preparation.ipynb
 ```
 
-For the repeated fixed equal-fusion experiment, use:
+Repeated fixed equal fusion:
 
 ```text
 02_model_training/22_Fixed_Equal_Fusion_Seed_Sensitivity.ipynb
 ```
 
-For the repeated learned participant-specific fusion experiment, use:
+Repeated learned participant-specific fusion:
 
 ```text
 02_model_training/21_Learned_Participant_Fusion_Seed_Sensitivity.ipynb
 ```
 
-Each configurable training notebook runs one selected seed and one selected outer fold at a time. The full evaluation was repeated for seeds 17, 42 and 73 and for all five outer folds.
-
-The matched repeated-seed comparison is performed in:
+Matched repeated-seed comparison:
 
 ```text
 03_evaluation_and_uncertainty/31_Learned_vs_Fixed_Fusion_Seed_Comparison.ipynb
 ```
 
-The repeated-seed uncertainty attribution analysis is performed in:
+Repeated-seed uncertainty attribution:
 
 ```text
 03_evaluation_and_uncertainty/33_Fixed_Fusion_Uncertainty_Attribution_Repeated_Seeds.ipynb
 ```
 
-## 6. Demonstration
+## 7. Reproducing the follow-up experiments
 
-For a short demonstration of one trained model run, the most convenient notebook is:
+The later experiments are grouped by purpose rather than by chronological notebook number. Start with `06_extended_experiments/README.md` for the directory map.
+
+The current locked nested-CV evaluation is:
 
 ```text
-02_model_training/22_Fixed_Equal_Fusion_Seed_Sensitivity.ipynb
+06_extended_experiments/model_selection/final_nested_cv_evaluation.ipynb
 ```
 
-A single seed and fold can be selected in the configuration cell. If the corresponding checkpoint already exists in the configured project directory, the notebook can load the saved model and evaluate the held-out test fold without retraining the complete experiment.
+The five-seed classical baseline comparison is:
 
-The score from one demonstration fold should not be interpreted as the overall dissertation result. The reported results aggregate held-out predictions across five folds and repeated random seeds.
+```text
+06_extended_experiments/classical_baselines/classical_baselines_5seeds.ipynb
+```
 
-## 7. Outputs
+The SVM–TMC fusion experiment is:
 
-The notebooks write generated artefacts to the external project directory rather than to this repository. These include:
+```text
+06_extended_experiments/fusion/svm_tmc_5seed_fusion.ipynb
+```
 
-- fold-specific prepared input tables;
-- preprocessing manifests and scalers;
-- model checkpoints;
-- training histories;
-- held-out predictions;
-- evaluation metrics;
-- uncertainty and conflict tables.
+## 8. Outputs
 
-This separation keeps restricted data and large generated files outside the source-code repository.
+Generated artefacts stay outside the repository unless they are aggregate, non-sensitive results. External outputs include prepared fold tables, MRI arrays, checkpoints, training histories and participant-level predictions.
 
-## 8. Standalone executable
+The committed `results/` directory contains only aggregate metrics and selected figures.
 
-This project is implemented as a reproducible research pipeline in Jupyter notebooks rather than as a standalone application. The notebooks document the execution order, configuration and generated outputs required to reproduce the experiments.
+## 9. Standalone executable
+
+This project is a reproducible research pipeline rather than a standalone application. The notebooks document the execution order, configuration and outputs needed to reproduce the experiments.
